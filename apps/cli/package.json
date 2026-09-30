@@ -1,0 +1,16 @@
+{
+  "name": "@fpl/cli",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "description": "CLI для подсчёта очков капитанства в мини-лиге Fantasy Premier League",
+  "scripts": {
+    "start": "tsx src/cli.ts",
+    "typecheck": "tsc -p .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@fpl/core": "workspace:*",
+    "@fpl/fpl-client": "workspace:*"
+  }
+}

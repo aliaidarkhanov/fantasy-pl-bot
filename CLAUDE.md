@@ -16,4 +16,14 @@ Full-stack приложение для аналитики очков капит�
 
 ## Команды
 
-(заполнить после фазы 1)
+Node 22 (`.nvmrc`), pnpm через corepack (`corepack enable`).
+
+- `pnpm install` — установить зависимости
+- `pnpm typecheck` — tsc во всех пакетах (через Turborepo)
+- `pnpm test` — Vitest во всех пакетах (через Turborepo)
+- `pnpm lint` — ESLint (typed) по всему репо
+- `pnpm format` / `pnpm format:check` — Prettier
+- `pnpm cli update-league [--force]` / `pnpm cli show` — CLI (tsx, без сборки)
+
+`pnpm show` не работает — это встроенная команда pnpm (`pnpm view`), поэтому
+CLI запускается через `pnpm cli <команда>`.

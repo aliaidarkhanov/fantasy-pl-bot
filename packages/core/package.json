@@ -1,0 +1,17 @@
+{
+  "name": "@fpl/core",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Чистые функции подсчёта очков капитанства (без сети и БД)",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@fpl/fpl-client": "workspace:*"
+  }
+}

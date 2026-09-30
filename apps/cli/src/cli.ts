@@ -5,8 +5,8 @@ import { loadState } from "./state";
 import { updateLeague } from "./update";
 
 const HELP = `Использование:
-  node dist/cli.js update-league [--force]   проверить новые данные, пересчитать и показать таблицу
-  node dist/cli.js show                      показать сохранённую таблицу без запросов к FPL
+  pnpm cli update-league [--force]   проверить новые данные, пересчитать и показать таблицу
+  pnpm cli show                      показать сохранённую таблицу без запросов к FPL
 
   --force   пересчитать все туры с нуля`;
 
@@ -38,7 +38,7 @@ async function main() {
   }
 }
 
-main().catch((err) => {
+main().catch((err: unknown) => {
   console.error("Ошибка:", err instanceof Error ? err.message : err);
   process.exitCode = 1;
 });

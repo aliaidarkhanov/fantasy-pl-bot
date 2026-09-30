@@ -1,25 +1,30 @@
 {
-  "name": "fpl-captain-bot",
-  "version": "0.2.0",
-  "description": "CLI для подсчёта очков капитанства в мини-лиге Fantasy Premier League",
-  "main": "dist/cli.js",
-  "bin": {
-    "fpl-captain": "dist/cli.js"
-  },
-  "type": "commonjs",
+  "name": "fpl-captain",
+  "private": true,
+  "type": "module",
+  "description": "Аналитика очков капитанства в мини-лигах Fantasy Premier League",
   "scripts": {
-    "build": "tsc",
-    "dev": "ts-node src/cli.ts",
-    "update-league": "node dist/cli.js update-league",
-    "show": "node dist/cli.js show",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "cli": "tsx apps/cli/src/cli.ts"
   },
   "devDependencies": {
-    "@types/node": "^22.10.0",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.7.2"
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^22.20.4",
+    "eslint": "^10.11.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.9.9",
+    "tsx": "^4.23.15",
+    "turbo": "^2.11.5",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.71.0",
+    "vitest": "^5.0.2"
   },
   "engines": {
-    "node": ">=18"
-  }
+    "node": ">=22.13"
+  },
+  "packageManager": "pnpm@11.28.3"
 }

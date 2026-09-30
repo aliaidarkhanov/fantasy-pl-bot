@@ -1,14 +1,40 @@
-# FPL Captain CLI
+# FPL Captain Analytics
 
-A command-line tool for a Fantasy Premier League mini-league: it tracks the
-total captaincy points each manager has scored over the season.
+Captaincy analytics for Fantasy Premier League mini-leagues: total captain
+points per manager across the season, Triple Captain usage, vice-captain
+fallbacks.
+
+The project is being turned from a CLI into a full-stack web app — see
+[docs/PLAN.md](docs/PLAN.md). Right now it's a pnpm + Turborepo monorepo with a
+CLI on top of shared packages.
+
+## Structure
+
+```
+apps/
+└── cli/             # command-line tool (update-league, show)
+packages/
+├── core/            # pure scoring functions, no network or DB
+└── fpl-client/      # FPL API client with Zod-validated responses
+    └── fixtures/    # trimmed real API responses used in tests
+```
+
+- `packages/core` — captain points (vice-captain, Triple Captain, double
+  gameweeks), completed match days, when a gameweek needs recalculating,
+  league standings.
+- `packages/fpl-client` — `createFplClient()` with timeouts, retries with
+  exponential backoff on 429/5xx/network errors, standings pagination, and a
+  concurrency helper (`mapLimit`).
+- `apps/cli` — config, local JSON state and the text table.
 
 ## Setup
 
+Requires Node 22 (see `.nvmrc`) and pnpm via corepack.
+
 ```bash
-npm install
+corepack enable
+pnpm install
 cp config.example.json config.json   # fill in league_id and my_id
-npm run build
 ```
 
 `config.json`:
@@ -24,12 +50,18 @@ The config path can be overridden with the `FPL_CONFIG` environment variable.
 ## Commands
 
 ```bash
-node dist/cli.js update-league          # check for new data, recalculate, print the table
-node dist/cli.js update-league --force  # recalculate all gameweeks from scratch
-node dist/cli.js show                   # print the saved table without calling the FPL API
+pnpm cli update-league          # check for new data, recalculate, print the table
+pnpm cli update-league --force  # recalculate all gameweeks from scratch
+pnpm cli show                   # print the saved table without calling the FPL API
+
+pnpm typecheck                  # TypeScript in every package
+pnpm test                       # Vitest in every package
+pnpm lint                       # ESLint
+pnpm format                     # Prettier
 ```
 
-Without building: `npm run dev -- update-league`.
+Note: use `pnpm cli show`, not `pnpm show` — the latter is pnpm's built-in
+alias for `pnpm view`.
 
 ## How update-league works
 
@@ -41,22 +73,12 @@ Without building: `npm run dev -- update-league`.
   last time (including final bonus points) and never touched again.
 - Captain points = the player's gameweek points × 2 (× 3 with Triple Captain).
   If the captain didn't play, the armband passes to the vice-captain; if
-  neither played, the score is 0.
+  neither played, the score is 0. In a double gameweek the captain counts as
+  "not played" only after both matches are over.
 - Managers who join the league later are automatically backfilled for all
   past gameweeks.
 - The first run processes every past gameweek of the season, which means
   "managers × gameweeks" requests to FPL, so it may take a little while.
-  Requests run at most 5 at a time and are retried on 429/503 responses.
-
-## Project structure
-
-```
-src/
-├── cli.ts       # entry point, command parsing
-├── config.ts    # reads config.json
-├── fpl-api.ts   # FPL API client
-├── update.ts    # update-league logic: detects new data, recalculates gameweeks
-├── captain.ts   # captain points calculation (vice-captain, Triple Captain)
-├── state.ts     # reads/writes data/state.json
-└── report.ts    # formats the output table
-```
+  Requests run at most 5 at a time and are retried on 429/5xx responses.
+- Every FPL API response is validated with Zod; if FPL changes its format the
+  CLI fails with a clear error instead of producing wrong numbers.

@@ -1,4 +1,19 @@
-import type { EntryPicks, LiveElement } from "./fpl-api";
+export interface PickInput {
+  element: number;
+  is_captain: boolean;
+  is_vice_captain: boolean;
+}
+
+export interface PicksInput {
+  active_chip: string | null;
+  picks: readonly PickInput[];
+}
+
+export interface LiveStats {
+  minutes: number;
+  /** Очки за тур; в двойном туре — уже сумма за оба матча */
+  total_points: number;
+}
 
 export interface CaptainResult {
   /** Игрок, который реально получил повязку (капитан или вице) */
@@ -15,7 +30,7 @@ export interface CaptainResult {
 }
 
 export interface CaptainContext {
-  live: Map<number, LiveElement["stats"]>;
+  live: ReadonlyMap<number, LiveStats>;
   playerName: (id: number) => string;
   /** Сыграл ли игрок все свои матчи тура (true и для команд без матча в туре) */
   isPlayerDone: (id: number) => boolean;
@@ -26,7 +41,7 @@ export interface CaptainContext {
  * Если капитан не вышел на поле и все его матчи сыграны — повязка
  * переходит к вице-капитану. Если не сыграли оба — очков капитана нет.
  */
-export function computeCaptain(picks: EntryPicks, ctx: CaptainContext): CaptainResult {
+export function computeCaptain(picks: PicksInput, ctx: CaptainContext): CaptainResult {
   const tripleCaptain = picks.active_chip === "3xc";
   const multiplier = tripleCaptain ? 3 : 2;
   const captain = picks.picks.find((p) => p.is_captain);
@@ -34,7 +49,7 @@ export function computeCaptain(picks: EntryPicks, ctx: CaptainContext): CaptainR
 
   const played = (id: number) => (ctx.live.get(id)?.minutes ?? 0) > 0;
   const result = (id: number | null, viceUsed: boolean, pending: boolean): CaptainResult => {
-    const basePoints = id === null ? 0 : ctx.live.get(id)?.total_points ?? 0;
+    const basePoints = id === null ? 0 : (ctx.live.get(id)?.total_points ?? 0);
     return {
       playerId: id,
       playerName: id === null ? null : ctx.playerName(id),

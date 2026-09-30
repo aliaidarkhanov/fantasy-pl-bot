@@ -17,7 +17,9 @@ function parseId(value: unknown, field: string, required: boolean): number | nul
   }
   const id = Number(value);
   if (!Number.isInteger(id) || id <= 0) {
-    throw new Error(`${field} в ${CONFIG_FILE} должен быть положительным целым числом, получено: ${value}`);
+    throw new Error(
+      `${field} в ${CONFIG_FILE} должен быть положительным целым числом, получено: ${JSON.stringify(value)}`,
+    );
   }
   return id;
 }
@@ -25,15 +27,17 @@ function parseId(value: unknown, field: string, required: boolean): number | nul
 export function loadConfig(): Config {
   if (!fs.existsSync(CONFIG_FILE)) {
     throw new Error(
-      `Не найден ${CONFIG_FILE}. Скопируйте config.example.json в config.json и впишите league_id и my_id.`
+      `Не найден ${CONFIG_FILE}. Скопируйте config.example.json в config.json и впишите league_id и my_id.`,
     );
   }
 
   let raw: Record<string, unknown>;
   try {
-    raw = JSON.parse(fs.readFileSync(CONFIG_FILE, "utf8"));
+    raw = JSON.parse(fs.readFileSync(CONFIG_FILE, "utf8")) as Record<string, unknown>;
   } catch (err) {
-    throw new Error(`Не удалось прочитать ${CONFIG_FILE}: ${(err as Error).message}`);
+    throw new Error(`Не удалось прочитать ${CONFIG_FILE}: ${(err as Error).message}`, {
+      cause: err,
+    });
   }
 
   return {
@@ -41,7 +45,7 @@ export function loadConfig(): Config {
     myId: parseId(raw.my_id, "my_id", false),
     dataFile: path.resolve(
       path.dirname(CONFIG_FILE),
-      typeof raw.data_file === "string" ? raw.data_file : "data/state.json"
+      typeof raw.data_file === "string" ? raw.data_file : "data/state.json",
     ),
   };
 }
