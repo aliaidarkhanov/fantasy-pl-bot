@@ -1,0 +1,25 @@
+{
+  "name": "fpl-captain-bot",
+  "version": "0.2.0",
+  "description": "CLI для подсчёта очков капитанства в мини-лиге Fantasy Premier League",
+  "main": "dist/cli.js",
+  "bin": {
+    "fpl-captain": "dist/cli.js"
+  },
+  "type": "commonjs",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/cli.ts",
+    "update-league": "node dist/cli.js update-league",
+    "show": "node dist/cli.js show",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
