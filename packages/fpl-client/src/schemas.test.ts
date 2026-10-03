@@ -47,7 +47,7 @@ describe("схемы принимают реальные ответы FPL API", 
   it("отбрасывает лишние поля", () => {
     const data = entryPicksSchema.parse(picksRegular);
     expect(data).not.toHaveProperty("entry_history");
-    expect(data.picks[0]).not.toHaveProperty("position");
+    expect(data.picks[0]).not.toHaveProperty("element_type");
   });
 
   it("отклоняет ответ с изменившейся структурой", () => {

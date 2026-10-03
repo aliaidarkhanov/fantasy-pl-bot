@@ -5,7 +5,7 @@
       "dependsOn": ["^typecheck"]
     },
     "test": {
-      "inputs": ["src/**", "fixtures/**", "package.json", "tsconfig.json"]
+      "inputs": ["src/**", "fixtures/**", "drizzle/**", "package.json", "tsconfig.json"]
     }
   }
 }

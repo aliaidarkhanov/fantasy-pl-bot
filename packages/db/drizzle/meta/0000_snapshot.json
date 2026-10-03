@@ -1,0 +1,342 @@
+{
+  "id": "7583eefc-4e48-4081-a949-d687d47bfa4d",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.captain_picks": {
+      "name": "captain_picks",
+      "schema": "",
+      "columns": {
+        "entry_id": {
+          "name": "entry_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "gw": {
+          "name": "gw",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "captain_player_id": {
+          "name": "captain_player_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "vice_player_id": {
+          "name": "vice_player_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "effective_captain_id": {
+          "name": "effective_captain_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "multiplier": {
+          "name": "multiplier",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "base_points": {
+          "name": "base_points",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "captain_points": {
+          "name": "captain_points",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "vice_used": {
+          "name": "vice_used",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "active_chip": {
+          "name": "active_chip",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "best_player_id": {
+          "name": "best_player_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "best_possible_points": {
+          "name": "best_possible_points",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "synced_at": {
+          "name": "synced_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "captain_picks_gw_index": {
+          "name": "captain_picks_gw_index",
+          "columns": [
+            {
+              "expression": "gw",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "captain_picks_entry_id_managers_entry_id_fk": {
+          "name": "captain_picks_entry_id_managers_entry_id_fk",
+          "tableFrom": "captain_picks",
+          "tableTo": "managers",
+          "columnsFrom": ["entry_id"],
+          "columnsTo": ["entry_id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "captain_picks_gw_gameweeks_id_fk": {
+          "name": "captain_picks_gw_gameweeks_id_fk",
+          "tableFrom": "captain_picks",
+          "tableTo": "gameweeks",
+          "columnsFrom": ["gw"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "captain_picks_entry_id_gw_pk": {
+          "name": "captain_picks_entry_id_gw_pk",
+          "columns": ["entry_id", "gw"]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.gameweeks": {
+      "name": "gameweeks",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "smallint",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "deadline": {
+          "name": "deadline",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "finished": {
+          "name": "finished",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "data_checked": {
+          "name": "data_checked",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.league_members": {
+      "name": "league_members",
+      "schema": "",
+      "columns": {
+        "league_id": {
+          "name": "league_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entry_id": {
+          "name": "entry_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "league_members_league_id_leagues_id_fk": {
+          "name": "league_members_league_id_leagues_id_fk",
+          "tableFrom": "league_members",
+          "tableTo": "leagues",
+          "columnsFrom": ["league_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "league_members_entry_id_managers_entry_id_fk": {
+          "name": "league_members_entry_id_managers_entry_id_fk",
+          "tableFrom": "league_members",
+          "tableTo": "managers",
+          "columnsFrom": ["entry_id"],
+          "columnsTo": ["entry_id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "league_members_league_id_entry_id_pk": {
+          "name": "league_members_league_id_entry_id_pk",
+          "columns": ["league_id", "entry_id"]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.leagues": {
+      "name": "leagues",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "last_synced_at": {
+          "name": "last_synced_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.managers": {
+      "name": "managers",
+      "schema": "",
+      "columns": {
+        "entry_id": {
+          "name": "entry_id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "player_name": {
+          "name": "player_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "team_name": {
+          "name": "team_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.players": {
+      "name": "players",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "web_name": {
+          "name": "web_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "team_id": {
+          "name": "team_id",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "position": {
+          "name": "position",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

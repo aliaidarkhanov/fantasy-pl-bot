@@ -1,0 +1,22 @@
+{
+  "name": "@fpl/sync",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Синхронизация завершённых туров FPL в БД",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@fpl/core": "workspace:*",
+    "@fpl/db": "workspace:*",
+    "@fpl/fpl-client": "workspace:*"
+  },
+  "devDependencies": {
+    "msw": "^2.15.0"
+  }
+}

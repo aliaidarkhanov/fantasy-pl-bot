@@ -9,7 +9,11 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "cli": "tsx apps/cli/src/cli.ts"
+    "cli": "tsx apps/cli/src/cli.ts",
+    "db:up": "docker compose up -d --wait",
+    "db:down": "docker compose down",
+    "db:generate": "pnpm --filter @fpl/db generate",
+    "db:migrate": "tsx packages/db/src/migrate.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

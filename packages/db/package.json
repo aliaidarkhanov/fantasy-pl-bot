@@ -1,0 +1,24 @@
+{
+  "name": "@fpl/db",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Схема БД (Drizzle), миграции и репозитории",
+  "exports": {
+    ".": "./src/index.ts",
+    "./testing": "./src/testing.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "test": "vitest run",
+    "generate": "drizzle-kit generate"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.45.3",
+    "postgres": "^3.4.9"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
+    "drizzle-kit": "^0.31.11"
+  }
+}

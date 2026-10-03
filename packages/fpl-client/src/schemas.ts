@@ -8,6 +8,7 @@ import { z } from "zod";
 export const eventSchema = z.object({
   id: z.number().int(),
   name: z.string(),
+  deadline_time: z.string(),
   finished: z.boolean(),
   data_checked: z.boolean(),
   is_current: z.boolean(),
@@ -17,6 +18,8 @@ export const elementSchema = z.object({
   id: z.number().int(),
   web_name: z.string(),
   team: z.number().int(),
+  /** 1 — вратарь, 2 — защитник, 3 — полузащитник, 4 — нападающий */
+  element_type: z.number().int(),
 });
 
 export const bootstrapSchema = z.object({
@@ -54,6 +57,8 @@ export const standingsPageSchema = z.object({
 
 export const pickSchema = z.object({
   element: z.number().int(),
+  /** 1–11 — стартовый состав, 12–15 — скамейка */
+  position: z.number().int(),
   multiplier: z.number().int(),
   is_captain: z.boolean(),
   is_vice_captain: z.boolean(),

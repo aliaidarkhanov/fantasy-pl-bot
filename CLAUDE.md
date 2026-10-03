@@ -23,7 +23,14 @@ Node 22 (`.nvmrc`), pnpm через corepack (`corepack enable`).
 - `pnpm test` — Vitest во всех пакетах (через Turborepo)
 - `pnpm lint` — ESLint (typed) по всему репо
 - `pnpm format` / `pnpm format:check` — Prettier
-- `pnpm cli update-league [--force]` / `pnpm cli show` — CLI (tsx, без сборки)
+- `pnpm cli update-league [--force]` / `pnpm cli show` — CLI на JSON-файле (tsx, без сборки)
+- `pnpm cli sync [--league <id>]` — загрузить завершённые туры лиги в Postgres
+- `pnpm db:up` / `pnpm db:down` — локальный Postgres в Docker
+- `pnpm db:generate` — сгенерировать миграцию после изменения `packages/db/src/schema.ts`
+- `pnpm db:migrate` — применить миграции к `DATABASE_URL` из `.env`
+
+Тесты БД и синхронизации идут на PGlite (Postgres в памяти) — Docker для
+`pnpm test` не нужен.
 
 `pnpm show` не работает — это встроенная команда pnpm (`pnpm view`), поэтому
 CLI запускается через `pnpm cli <команда>`.

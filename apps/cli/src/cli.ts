@@ -2,11 +2,14 @@
 import { loadConfig } from "./config";
 import { formatReport } from "./report";
 import { loadState } from "./state";
+import { runSync } from "./sync-command";
 import { updateLeague } from "./update";
 
 const HELP = `Использование:
   pnpm cli update-league [--force]   проверить новые данные, пересчитать и показать таблицу
   pnpm cli show                      показать сохранённую таблицу без запросов к FPL
+  pnpm cli sync [--league <id>]      загрузить завершённые туры лиги в БД (DATABASE_URL);
+                                     без --league берётся league_id из config.json
 
   --force   пересчитать все туры с нуля`;
 
@@ -30,6 +33,10 @@ async function main() {
         return;
       }
       console.log(formatReport(state, cfg.myId));
+      break;
+    }
+    case "sync": {
+      await runSync(args);
       break;
     }
     default:

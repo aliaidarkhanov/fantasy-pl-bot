@@ -12,11 +12,14 @@ CLI on top of shared packages.
 
 ```
 apps/
-└── cli/             # command-line tool (update-league, show)
+└── cli/             # command-line tool (update-league, show, sync)
 packages/
 ├── core/            # pure scoring functions, no network or DB
-└── fpl-client/      # FPL API client with Zod-validated responses
-    └── fixtures/    # trimmed real API responses used in tests
+├── fpl-client/      # FPL API client with Zod-validated responses
+│   └── fixtures/    # trimmed real API responses used in tests
+├── db/              # Drizzle schema, SQL migrations, repositories
+└── sync/            # loads finished gameweeks from FPL into Postgres
+docker-compose.yml   # local Postgres
 ```
 
 - `packages/core` — captain points (vice-captain, Triple Captain, double
@@ -25,7 +28,12 @@ packages/
 - `packages/fpl-client` — `createFplClient()` with timeouts, retries with
   exponential backoff on 429/5xx/network errors, standings pagination, and a
   concurrency helper (`mapLimit`).
-- `apps/cli` — config, local JSON state and the text table.
+- `packages/db` — Postgres schema (leagues, managers, gameweeks, players,
+  captain picks) and repositories that work with any Drizzle Postgres client
+  (postgres.js in production, in-memory PGlite in tests).
+- `packages/sync` — `syncLeague()` / `syncAllLeagues()`: stores every finished
+  and FPL-checked gameweek of a league; safe to re-run.
+- `apps/cli` — config, local JSON state, the text table and `sync`.
 
 ## Setup
 
@@ -60,8 +68,32 @@ pnpm lint                       # ESLint
 pnpm format                     # Prettier
 ```
 
+### Database
+
+```bash
+cp .env.example .env    # DATABASE_URL=postgres://fpl:fpl@localhost:5432/fpl
+pnpm db:up              # start Postgres in Docker
+pnpm db:migrate         # apply migrations
+pnpm cli sync --league 123456   # or without --league to use league_id from config.json
+```
+
+`pnpm test` does not need Docker: database tests run on in-memory PGlite.
+
 Note: use `pnpm cli show`, not `pnpm show` — the latter is pnpm's built-in
 alias for `pnpm view`.
+
+## How sync works
+
+- Only gameweeks that are `finished` and `data_checked` are stored; their
+  points never change afterwards.
+- For each such gameweek, only managers without a stored row are fetched, so a
+  second run makes just two requests (bootstrap-static and standings).
+- A manager without a team in a gameweek (joined later) is stored as a row
+  without a captain, so it is not re-requested every run.
+- Each gameweek is written in a single statement: if FPL fails midway, finished
+  gameweeks stay saved and the next run continues from there.
+- Besides captain points, it stores the best possible captain from the starting
+  XI (all 15 with Bench Boost) — the base for "missed points" analytics.
 
 ## How update-league works
 

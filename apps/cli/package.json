@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@fpl/core": "workspace:*",
-    "@fpl/fpl-client": "workspace:*"
+    "@fpl/db": "workspace:*",
+    "@fpl/fpl-client": "workspace:*",
+    "@fpl/sync": "workspace:*"
   }
 }
